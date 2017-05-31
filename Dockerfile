@@ -6,7 +6,7 @@ ENV http_proxy 172.17.0.1:3128
 ENV https_proxy 172.17.0.1:3128
 LABEL "repo"="https://github.com/schollz/howmanypeoplearearound"
 
-RUN && apt-get update \
+RUN apt-get update \
  && apt-get upgrade --yes \
  && DEBIAN_FRONTEND=noninteractive apt-get install -y tshark \
  && yes | dpkg-reconfigure -f noninteractive wireshark-common \
