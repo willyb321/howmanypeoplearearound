@@ -15,36 +15,36 @@ def analyze_file(fname, port):
         except:
           pass
     macs_to_add = []
-    for data in lines:
-        for c in data['cellphones']:
-            if c['rssi'] > -80 and c['mac'] not in macs_to_add:
-                macs_to_add.append(c['mac'])
-    mac_data = {mac: {'y': []} for mac in macs_to_add}
+#    for data in lines:
+#        for c in data['cellphones']:
+#            if c['rssi'] > -80 and c['mac'] not in macs_to_add:
+#                macs_to_add.append(c['mac'])
+#    mac_data = {mac: {'y': []} for mac in macs_to_add}
     num = {'x': [], 'y': []}
     for data in lines:
         rssi = {}
-        for mac in macs_to_add:
-            rssi[mac] = -100
-            for c in data['cellphones']:
-                if c['mac'] in rssi:
-                    rssi[c['mac']] = c['rssi']
-        for mac in mac_data:
-            mac_data[mac]['y'].append(str(rssi[mac] + 100))
+ #       for mac in macs_to_add:
+ #           rssi[mac] = -100
+ #           for c in data['cellphones']:
+ #               if c['mac'] in rssi:
+ #                   rssi[c['mac']] = c['rssi']
+#        for mac in mac_data:
+#            mac_data[mac]['y'].append(str(rssi[mac] + 100))
         num['x'].append("'" + datetime.datetime.fromtimestamp(
             data['time']).isoformat().split('.')[0].replace('T', ' ') + "'")
         num['y'].append(str(len(data['cellphones'])))
 
-    mac_names = copy.deepcopy(macs_to_add)
-    for i, mac in enumerate(mac_names):
-        mac_names[i] = 'mac' + mac.replace(':', '')
+    #mac_names = copy.deepcopy(macs_to_add)
+    #for i, mac in enumerate(mac_names):
+    #    mac_names[i] = 'mac' + mac.replace(':', '')
 
     # remove pings
-    for mac in mac_data:
-        for i, y in enumerate(mac_data[mac]['y']):
-            if y == "0" and i > 2:
-                if mac_data[mac]['y'][i - 3] == "0" and (mac_data[mac]['y'][i - 1] != "0" or mac_data[mac]['y'][i - 2] != "0"):
-                    mac_data[mac]['y'][i - 1] = "0"
-                    mac_data[mac]['y'][i - 2] = "0"
+    #for mac in mac_data:
+    #    for i, y in enumerate(mac_data[mac]['y']):
+    #        if y == "0" and i > 2:
+    #            if mac_data[mac]['y'][i - 3] == "0" and (mac_data[mac]['y'][i - 1] != "0" or mac_data[mac]['y'][i - 2] != "0"):
+    #               mac_data[mac]['y'][i - 1] = "0"
+    #                mac_data[mac]['y'][i - 2] = "0"
 
     js = ""
     js += ('timex = [%s]' % ', '.join(num['x']))
@@ -53,8 +53,8 @@ def analyze_file(fname, port):
         js += ('\n  x: timex,')
         js += ('\n  y: [%s],' % ', '.join(mac_data[mac]['y']))
         js += ("\n name: '%s', mode: 'lines', type:'scatter' };\n\n" % mac)
-    js += ('\n\nvar data = [%s];' % ', '.join(mac_names))
-    js += ("\n\nPlotly.newPlot('myDiv',data,layout2);")
+    #js += ('\n\nvar data = [%s];' % ', '.join(mac_names))
+    #js += ("\n\nPlotly.newPlot('myDiv',data,layout2);")
     js += ('\nvar num_cellphones = {')
     js += ('\n  x: timex,')
     js += ('\n  y: [%s],' % ', '.join(num['y']))
